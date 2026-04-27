@@ -69,4 +69,3 @@ A zip file with your changes, plus a `NOTES.md` at the root covering:
 3. Trade-offs you made and why.
 
 Questions? Please reach out
-# scribeup-coding-challenge-2026
