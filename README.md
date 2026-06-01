@@ -6,10 +6,10 @@ The take-home is intentionally under-specified — closer to how a real ticket l
 
 ## What's here
 
-- `backend/` — Django + SQLite project with a `Transaction` model and a seed script that generates realistic subscription data.
+- `backend/` — Django + SQLite project with a `Transaction` model and a **pre-seeded database** (`backend/db.sqlite3`) of realistic transaction data.
 - `frontend/` — A minimal Vite + React app that lists transactions for a user.
 
-The seed script generates ~5,000 fake transactions across ~50 users — a mix of real recurring subscriptions, near-recurring noise, and one-off purchases. SQLite is used so there's nothing to install beyond Python and Node.
+The database holds several thousand transactions across ~50 users — a mix of real recurring subscriptions, near-recurring noise, and one-off purchases. The data is already seeded; there's nothing to generate. SQLite is used so there's nothing to install beyond Python and Node.
 
 ## Running locally
 
@@ -20,8 +20,7 @@ You'll need: Python 3.11+ and Node 20+.
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python manage.py migrate
-python manage.py seed   # generates ~5,000 transactions across ~50 users
+python manage.py migrate    # no-op; the shipped db.sqlite3 is already migrated + seeded
 python manage.py runserver
 
 # Frontend (in another terminal)
@@ -31,6 +30,8 @@ npm run dev
 ```
 
 Backend runs on `http://localhost:8000`, frontend on `http://localhost:5173`.
+
+The database ships pre-seeded, so the data is identical for every candidate. Please don't delete or recreate `backend/db.sqlite3` — work against the data as given.
 
 ## What's already wired up
 
@@ -43,9 +44,11 @@ Backend runs on `http://localhost:8000`, frontend on `http://localhost:5173`.
 Build a `GET /users/<user_id>/subscriptions/` endpoint that returns the recurring subscriptions detected for that user. For each subscription, return at minimum:
 
 - merchant
-- cadence (monthly / weekly / yearly / unknown)
+- cadence
 - typical amount
 - next predicted charge date
+
+For cadence, weekly / monthly / yearly are the obvious ones — but look closely at the data before you commit to a fixed set of buckets. Real subscriptions bill on other rhythms too, and charge dates aren't perfectly regular.
 
 Then wire it up to the React page so a user can see their detected subscriptions alongside their transactions.
 
@@ -58,7 +61,7 @@ Use any AI tools you'd normally use — Cursor, Copilot, Claude, ChatGPT, all fa
 - Look at the seeded data before you start coding — there are interesting edge cases worth noticing.
 - The schema is intentionally minimal — if you want to add fields or tables, that's a design decision worth defending.
 - Don't polish — we'd rather see honest trade-offs than perfect code.
-- If something is genuinely unclear, ask
+- If something is genuinely unclear, ask.
 
 ## What to submit
 
